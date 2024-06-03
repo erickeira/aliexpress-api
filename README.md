@@ -88,15 +88,4 @@ curl http://localhost:3000/product/123
 }
 ```
 
-## Notas
-- A API busca detalhes do produto no AliExpress usando uma URL específica e parâmetros gerados pelo `getSearchParams`.
-- Certifique-se de que o módulo `getSearchParams` está configurado e implementado corretamente para retornar os parâmetros e cookies necessários para a requisição.
-
-## Licença
-Este projeto é licenciado sob a Licença MIT.
-
-## Agradecimentos
-- Express.js
-- AliExpress API
-
 Sinta-se à vontade para contribuir e fazer melhorias nesta API!
