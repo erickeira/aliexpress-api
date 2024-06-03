@@ -1,31 +1,41 @@
-const express = require('express');
+import express from 'express';
+import  getSearchParams from './gerenate_params.js';
+
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 
-let products = [];
-
-// Rota para criar um novo item
-app.post('/products', (req, res) => {
-    const product = req.body;
-    products.push(product);
-    res.status(201).send(product);
-});
-
 // Rota para listar todos os itens
-app.get('/products', (req, res) => {
-    res.send(products);
+app.get('/products', async (req, res) => {
+    res.send([]);
 });
 
 // Rota para obter um item específico pelo ID
-app.get('/products/:id', (req, res) => {
+app.get('/product/:id', async (req, res) => {
     const id = parseInt(req.params.id);
-    const products = products.find(i => i.id === id);
 
-    if (products) {
-        res.send(products);
-    } else {
+    if(!id){
+        res.status(400).send({ message: 'Informe o id do produto' });
+    }
+    const browser = await getSearchParams(id);
+
+    const url = 'https://acs.aliexpress.com/h5/mtop.aliexpress.pdp.pc.query/1.0/';
+    const cookieHeader = browser.cookies.map(cookie => `${cookie.name}=${cookie.value}`).join('; ');
+    try {
+        const response = await fetch(url + '?' + new URLSearchParams(browser.params), {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            Cookie: cookieHeader
+          }
+        });
+        const result = await response.text();
+        const jsonString = result.substring(result.indexOf('(') + 1, result.lastIndexOf(')'));
+        const jsonObject = JSON.parse(jsonString);
+        res.send(jsonObject.data);    
+    } catch (error) {
+        console.error('Erro:', error);
         res.status(404).send({ message: 'Item não encontrado' });
     }
 });
