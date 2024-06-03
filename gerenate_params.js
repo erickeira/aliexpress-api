@@ -2,18 +2,36 @@ import puppeteer from 'puppeteer';
 import Crypto from 'crypto-js';
 
 const getBrowserToken = async () => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto('https://pt.aliexpress.com/');
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
 
+  await page.setRequestInterception(true);
+  //Validaçao feita pra diminuir o tempo de carregamento do página
+  page.on('request', async (request) => {
     const cookies = await page.cookies();
-    // await browser.close();
-
-    return {
-      cookies,
-      token :cookies.find(c => c.name == '_m_h5_tk')?.value?.split('_')[0] || ''
+    const tokenCookie = cookies.find(c => c.name === '_m_h5_tk');
+    const token = tokenCookie ? tokenCookie.value.split('_')[0] : null;
+    if (token) {
+      request.abort(); 
+    }else if(request.resourceType() === 'document' || request.resourceType() === 'script' || request.resourceType() === 'xhr'){
+      request.continue();
+    } else {
+      request.abort();
     }
-}
+  });
+
+  await page.goto('https://pt.aliexpress.com/');
+
+  const cookies = await page.cookies();
+  
+  await browser.close();
+
+  return {
+    cookies,
+    token: cookies.find(c => c.name === '_m_h5_tk')?.value?.split('_')[0] || ''
+  };
+};
+
 
 const getSearchParams = async (productId = '') => {
   const timestamp = Date.now().toString();  
