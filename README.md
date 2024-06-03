@@ -1,7 +1,7 @@
 # Documentação da API
 
 ## Visão Geral
-Esta API permite que você interaja com um banco de dados de produtos. Ela fornece endpoints para listar todos os produtos e recuperar um produto específico pelo seu ID. A API é construída usando Node.js com o framework Express.
+Esta API permite que você liste e veja detalhes dos produtos da AliExpress. A API é construída usando Node.js com o framework Express.
 
 ## Começando
 
