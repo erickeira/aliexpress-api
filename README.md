@@ -12,11 +12,11 @@ Esta API permite que você interaja com um banco de dados de produtos. Ela forne
 ### Instalação
 1. Clone o repositório:
     ```sh
-    git clone <repository_url>
+    git clone https://github.com/erickeira/aliexpress-api.git
     ```
 2. Navegue até o diretório do projeto:
     ```sh
-    cd <project_directory>
+    cd aliexpress-api
     ```
 3. Instale as dependências:
     ```sh
@@ -26,7 +26,7 @@ Esta API permite que você interaja com um banco de dados de produtos. Ela forne
 ### Executando a API
 1. Inicie o servidor:
     ```sh
-    node app.js
+    npm run start
     ```
 2. A API estará rodando em:
     ```
